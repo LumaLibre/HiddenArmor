@@ -17,6 +17,9 @@ ignore:
   # Set this to true if you want elytras to never be hidden.
   # If this is set to false, the elytra will only be hidden to other players due to minecraft limitations.
   elytra: false
+  # List of worlds where the plugin will not hide armor.
+  worlds:
+    - example_world
 
 
 # Set to true if you want the command to be allowed to all players by default or to false if you want

@@ -16,6 +16,7 @@ import me.kteq.hiddenarmor.manager.PlayerManager;
 import me.kteq.hiddenarmor.util.ItemUtil;
 
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -30,6 +31,7 @@ public class EntityEquipmentPacketListener extends PacketAdapter implements Conf
     private boolean ignoreLeatherArmor;
     private boolean ignoreTurtleHelmet;
     private boolean ignoreElytra;
+    private List<String> ignoreWorlds;
 
     private final int ENTITY_ID_INDEX;
     private final int SLOT_ITEM_PAIR_LIST_INDEX;
@@ -66,16 +68,17 @@ public class EntityEquipmentPacketListener extends PacketAdapter implements Conf
             {
                 pair.setSecond(new ItemStack(Material.ELYTRA));
             }
-            else if (!shouldIgnore(pair.getSecond()))
+            else if (!shouldIgnore(pair.getSecond(), packetPlayer.getWorld()))
                 pair.setSecond(new ItemStack(Material.AIR));
         }
         packet.getSlotStackPairLists().write(0, pairList);
     }
 
-    private boolean shouldIgnore(ItemStack itemStack) {
+    private boolean shouldIgnore(ItemStack itemStack, World world) {
         Material material = itemStack.getType();
 
-        return (ignoreLeatherArmor && material.toString().startsWith("LEATHER")) ||
+        return (ignoreWorlds.contains(world.getName()) ||
+                ignoreLeatherArmor && material.toString().startsWith("LEATHER")) ||
                 (ignoreTurtleHelmet && material.equals(Material.TURTLE_HELMET)) ||
                 (!ItemUtil.isArmor(itemStack) && !itemStack.getType().equals(Material.ELYTRA)) ||
                 (ignoreElytra && itemStack.getType().equals(Material.ELYTRA));
@@ -86,5 +89,6 @@ public class EntityEquipmentPacketListener extends PacketAdapter implements Conf
         this.ignoreLeatherArmor = config.getBoolean("ignore.leather-armor");
         this.ignoreTurtleHelmet = config.getBoolean("ignore.turtle-helmet");
         this.ignoreElytra = config.getBoolean("ignore.elytra");
+        this.ignoreWorlds = config.getStringList("ignore.worlds");
     }
 }
