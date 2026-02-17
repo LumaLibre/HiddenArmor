@@ -41,4 +41,4 @@ locale:
   default-locale: 'en-us'
 
 # Used to inform when a new config update is available, don't change this
-config-version: 2
+config-version: 3
