@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class PotionEffectListener implements Listener {
     HiddenArmor plugin;
@@ -28,11 +27,8 @@ public class PotionEffectListener implements Listener {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
 
-        new BukkitRunnable(){
-            @Override
-            public void run() {
-                armorUpdater.updatePlayer(player);
-            }
-        }.runTaskLater(plugin, 2L);
+        player.getScheduler().runDelayed(plugin, task -> {
+            armorUpdater.updatePlayer(player);
+        }, null, 2L);
     }
 }

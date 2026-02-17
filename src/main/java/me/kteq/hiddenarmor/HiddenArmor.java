@@ -11,7 +11,6 @@ import me.kteq.hiddenarmor.handler.MessageHandler;
 import me.kteq.hiddenarmor.listener.packet.WindowItemsPacketListener;
 import me.kteq.hiddenarmor.util.ConfigHolder;
 import me.kteq.hiddenarmor.util.protocol.PacketIndexMapper;
-import me.kteq.hiddenarmor.util.Metrics;
 import me.kteq.hiddenarmor.listener.EntityToggleGlideListener;
 import me.kteq.hiddenarmor.listener.GameModeListener;
 import me.kteq.hiddenarmor.listener.PotionEffectListener;
@@ -19,6 +18,7 @@ import me.kteq.hiddenarmor.listener.InventoryShiftClickListener;
 import me.kteq.hiddenarmor.listener.packet.EntityEquipmentPacketListener;
 import me.kteq.hiddenarmor.listener.packet.SetSlotPacketListener;
 import me.kteq.hiddenarmor.manager.PlayerManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.logging.Level;
 
 public final class HiddenArmor extends JavaPlugin {
+
+    private static HiddenArmor instance;
+
     private PlayerManager playerManager;
     private ArmorUpdateHandler armorUpdater;
     private ArmorPlaceholderHandler armorPlaceholderHandler;
@@ -34,6 +37,11 @@ public final class HiddenArmor extends JavaPlugin {
     private List<ConfigHolder> configHolders;
 
     private ProtocolManager protocolManager;
+
+    @Override
+    public void onLoad() {
+        instance = this;
+    }
 
     @Override
     public void onEnable() {
@@ -121,5 +129,9 @@ public final class HiddenArmor extends JavaPlugin {
 
     public ProtocolManager getProtocolManager() {
         return protocolManager;
+    }
+
+    public static HiddenArmor getInstance() {
+        return instance;
     }
 }

@@ -4,8 +4,11 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.EnumWrappers;
 import com.comphenix.protocol.wrappers.Pair;
+import me.kteq.hiddenarmor.HiddenArmor;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -13,9 +16,16 @@ import org.bukkit.inventory.PlayerInventory;
 public class ProtocolUtil {
 
     public static void broadcastPlayerPacket(ProtocolManager manager, PacketContainer packet, Player player) {
+        World world = player.getWorld();
+        Location loc = player.getLocation();
+        int viewRadius = Bukkit.getViewDistance() * 16;
         for(Player p : Bukkit.getOnlinePlayers()){
-            if(!(p.getWorld().equals(player.getWorld()) && p.getLocation().distance(player.getLocation()) < Bukkit.getViewDistance()*16 && !p.equals(player))) continue;
-            manager.sendServerPacket(p, packet);
+            p.getScheduler().run(HiddenArmor.getInstance(), task -> {
+                if(!(p.getWorld().equals(world) && p.getLocation().distance(loc) < viewRadius && !p.equals(player))) {
+                    return;
+                }
+                manager.sendServerPacket(p, packet);
+            }, null);
         }
     }
 
