@@ -5,7 +5,7 @@ import org.bukkit.ChatColor;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class StrUtil {
+public final class StrUtil {
     public static String color(String s){
         return ChatColor.translateAlternateColorCodes('&', s);
     }
@@ -16,6 +16,20 @@ public abstract class StrUtil {
             coloredStringList.add(color(s));
         }
         return coloredStringList;
+    }
+
+
+    public static String capitalizeFully(String str) {
+        String[] words = str.split(" ");
+        StringBuilder sb = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty()) {
+                sb.append(Character.toUpperCase(word.charAt(0)))
+                        .append(word.substring(1).toLowerCase())
+                        .append(" ");
+            }
+        }
+        return sb.toString().trim();
     }
 
 }
