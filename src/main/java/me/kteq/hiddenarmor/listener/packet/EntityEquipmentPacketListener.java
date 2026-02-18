@@ -50,11 +50,9 @@ public class EntityEquipmentPacketListener extends PacketAdapter implements Conf
     @Override
     public void onPacketSending(PacketEvent event) {
         PacketContainer packet = event.getPacket();
-        Player player = event.getPlayer();
 
-        LivingEntity livingEntity = (LivingEntity) protocolManager.getEntityFromID(player.getWorld(), packet.getIntegers().read(ENTITY_ID_INDEX));
-        if(!(livingEntity instanceof Player)) return;
-        Player packetPlayer = (Player) livingEntity;
+        Player packetPlayer = getPlayerByEntityId(packet.getIntegers().read(ENTITY_ID_INDEX));
+        if (packetPlayer == null) return;
 
         if(hiddenArmorManager.isArmorVisible(packetPlayer)) return;
 
@@ -90,5 +88,14 @@ public class EntityEquipmentPacketListener extends PacketAdapter implements Conf
         this.ignoreTurtleHelmet = config.getBoolean("ignore.turtle-helmet");
         this.ignoreElytra = config.getBoolean("ignore.elytra");
         this.ignoreWorlds = config.getStringList("ignore.worlds");
+    }
+
+    private Player getPlayerByEntityId(int entityId) {
+        for (Player p : plugin.getServer().getOnlinePlayers()) {
+            if (p.getEntityId() == entityId) {
+                return p;
+            }
+        }
+        return null;
     }
 }
